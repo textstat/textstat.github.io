@@ -6,7 +6,9 @@ from pathlib import Path
 
 text = Path("alice.txt").read_text()
 
-textstat.flesch_reading_ease(text)`;
+textstat.flesch_reading_ease(text)
+# edit me!
+# textstat.gunning_fog(text)`;
 ---
 
 <div class="lg:w-[32rem] md:w-[40rem]">
@@ -78,8 +80,6 @@ textstat.flesch_reading_ease(text)`;
     }
 
     async function main() {
-        const runButton = document.getElementById("run");
-
         setLoading(true);
 
         let pyodide = await loadPyodide();
@@ -96,7 +96,7 @@ textstat.flesch_reading_ease(text)`;
 
         setLoading(false);
 
-        runButton.addEventListener("click", async () => {
+        document.getElementById("run")?.addEventListener("click", async () => {
             await setLoading(true);
             output.innerText = await pyodide.runPythonAsync(jar.toString());
             await setLoading(false);
