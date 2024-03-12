@@ -1,0 +1,111 @@
+---
+import { Icon } from "astro-icon";
+
+const code = `import textstat
+from pathlib import Path
+
+text = Path("alice.txt").read_text()
+
+textstat.flesch_reading_ease(text)`;
+---
+
+<div class="lg:w-[32rem] md:w-[40rem]">
+    <!-- prettier-ignore -->
+    <div id="editor" class="bg-gray-900 font-mono rounded p-8 text-white m-2">{code}</div>
+
+    <div class="flex flex-row">
+        <button
+            id="run"
+            class="bg-teal-500 rounded px-6 py-3 m-2 text-white disabled:bg-teal-100 disabled:hover:cursor-wait"
+            >Run
+            <Icon
+                id="runIcon"
+                class="text-white w-5 h-5 ml-2 inline-block hidden"
+                name="bx:bx-play"
+            />
+            <Icon
+                id="loadingIcon"
+                class="text-white w-5 h-5 ml-2 inline-block animate-spin"
+                name="bx:bx-loader-alt"
+            />
+        </button>
+        <div
+            id="output"
+            class="grow bg-gray-900 font-mono rounded p-3 text-white m-2 h-12"
+        >
+        </div>
+    </div>
+</div>
+
+<script>
+    import { CodeJar } from "codejar";
+    import hljs from "highlight.js/lib/core";
+    import python from "highlight.js/lib/languages/python";
+
+    hljs.registerLanguage("python", python);
+
+    const editor = document.getElementById("editor");
+    const output = document.getElementById("output");
+
+    const highlight = (editor) => {
+        editor.innerHTML = hljs.highlight(editor.textContent, {
+            language: "python",
+        }).value;
+    };
+
+    const jar = CodeJar(editor, highlight, {
+        tab: "",
+    });
+
+    jar.updateCode(jar.toString());
+
+    async function setLoading(loading: boolean) {
+        const runButton = document.getElementById("run");
+        const runIcon = document.getElementById("runIcon");
+        const loadingIcon = document.getElementById("loadingIcon");
+
+        if (loading) {
+            runButton.disabled = true;
+
+            runIcon.classList.add("hidden");
+            loadingIcon.classList.remove("hidden");
+        } else {
+            runButton.disabled = false;
+
+            runIcon.classList.remove("hidden");
+            loadingIcon.classList.add("hidden");
+        }
+    }
+
+    async function main() {
+        const runButton = document.getElementById("run");
+
+        setLoading(true);
+
+        let pyodide = await loadPyodide();
+
+        await pyodide.FS.writeFile(
+            "alice.txt",
+            "Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it.",
+            { encoding: "utf8" },
+        );
+
+        await pyodide.loadPackage("micropip");
+        await pyodide.loadPackage("setuptools");
+        await pyodide.pyimport("micropip").install("textstat");
+
+        setLoading(false);
+
+        runButton.addEventListener("click", async () => {
+            await setLoading(true);
+            output.innerText = await pyodide.runPythonAsync(jar.toString());
+            await setLoading(false);
+        });
+    }
+    main();
+</script>
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>

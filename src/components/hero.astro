@@ -1,0 +1,51 @@
+---
+import Link from "@components/ui/link.astro";
+import Playground from "@components/playground.astro";
+import Icon from "astro-icon";
+---
+
+<main
+  class="grid lg:grid-cols-2 place-items-center pt-16 pb-8 md:pt-12 md:pb-24"
+>
+  <div class="py-6 md:order-1 hidden md:block">
+    <Playground />
+  </div>
+  <div>
+    <h1
+      class="text-6xl lg:text-6xl xl:text-7xl font-bold lg:tracking-tight xl:tracking-tighter"
+    >
+      Analyse text<br />with <span class="text-teal-500">Textstat</span>
+    </h1>
+    <p class="text-lg mt-4 text-slate-600 max-w-xl">
+      Textstat is an easy to use library to calculate statistics from text.<br
+      />
+    </p>
+    <p class="text-lg mt-4 text-slate-600 max-w-xl">
+      It provides utilities for calculating text metrics and comes built-in with
+      functions to help determine readability, complexity, and grade level.
+    </p>
+    <div class="mt-6 flex flex-col sm:flex-row gap-3">
+      <Link
+        href="#"
+        href="https://docs.textstat.org/"
+        target="_blank"
+        class="flex gap-1 items-center justify-center"
+        rel="noopener"
+      >
+        Get started
+        <Icon class="text-white w-5 h-5 ml-2" name="bx:bx-right-arrow-alt" />
+      </Link>
+      <Link
+        size="lg"
+        style="outline"
+        rel="noopener"
+        href="https://github.com/textstat/textstat"
+        class="flex gap-1 items-center justify-center"
+        target="_blank"
+      >
+        GitHub
+        <Icon class="text-black w-4 h-4 ml-2" name="bx:bxl-github" />
+      </Link>
+    </div>
+  </div>
+</main>
