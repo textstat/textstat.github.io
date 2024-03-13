@@ -93,7 +93,7 @@ textstat.flesch_reading_ease(text)
         await pyodide.loadPackage("micropip");
         await pyodide.loadPackage("setuptools");
         await pyodide.pyimport("micropip").install("textstat");
-
+        output.innerText = await pyodide.runPythonAsync(jar.toString());
         setLoading(false);
 
         document.getElementById("run")?.addEventListener("click", async () => {
