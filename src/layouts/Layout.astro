@@ -26,10 +26,23 @@ const makeTitle = title ? title + " | " + "Textstat" : "Textstat";
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" href="/favicon.ico" />
-    <script
-      async
-      data-id="101446851"
-      src="https://clicky.textstat.org/626b4fc074e.js"></script>
+
+    <script data-id="101446851" src="https://clicky.textstat.org/626b4fc074e.js"
+    ></script>
+    <script>
+      (function () {
+        const proxied = clicky?.inject;
+
+        clicky.inject = function (src, type) {
+          if (src.startsWith("/b6bbbd0c429")) {
+            return proxied(`https://clicky.textstat.org/${src}`, type);
+          }
+
+          return proxied(src, type);
+        };
+      })();
+    </script>
+
     <meta name="generator" content={Astro.generator} />
 
     <SEO
