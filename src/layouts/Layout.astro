@@ -35,7 +35,7 @@ const makeTitle = title ? title + " | " + "Textstat" : "Textstat";
 
         clicky.inject = function (src, type) {
           if (src.startsWith("/b6bbbd0c429")) {
-            return proxied(`https://clicky.textstat.org/${src}`, type);
+            return proxied(`https://clicky.textstat.org${src}`, type);
           }
 
           return proxied(src, type);
